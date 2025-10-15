@@ -25,7 +25,7 @@ during runtime only scalar, MMX, and SSE is supported, the SSE function will lik
 There are four function names, ezsimd::add, ezsimd::sub, ezsimd::mul, and ezsimd::div.\
 These are overloaded a few times to support std::vector, std::array, and C-style arrays\
 and all the datatypes including:\
-    int8_t\
+    ```int8_t\
     int16_t\
     int32_t\
     int64_t\
@@ -38,6 +38,7 @@ and all the datatypes including:\
     float\
     double\
     long double\
+    ```
 \
 For std::vector:\
     ezsimd::add(const std::vector\<T\>& a, const std::vector\<T\>& b, std::vector\<T\>& c)\
