@@ -105,5 +105,14 @@ you typically have to specify to the compiler to enable certain features.
 For G++, you have to use additional flags to enable each SIMD type.
 -mmmx -msse -msse2 -mavx -mavx2
 
+If the header or library is compiled with the EZSIMD_SHOW_FUNC macro defined,
+upon every function call, the library will output to stdout which target function is being used.
+It may not be obvious to some that not all SIMD types support all datatypes.
+For instance, if you run operations with floats/doubles, and when compiled with EZSIMD_SHOW_FUNC,
+it says it's running on AVX and not AVX2, even if the platform supports AVX2.
+That's because AVX supports float and double operations on the 256-bit AVX registers.
+AVX2 just added integer support for those same registers. So all of the integer operations
+would run on the AVX2 target and all floating point operations on the AVX target.
+
 This has not been tested in any meaningful capacity.
 OpenCL/CUDA functions are in the works.
