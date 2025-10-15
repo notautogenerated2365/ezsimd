@@ -155,23 +155,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 31 < l; i += 32) {
                         if (isAlignedA) {
-                            vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi8(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int8_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int8_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int8_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int8_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -309,23 +309,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -463,23 +463,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -572,23 +572,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 3 < l; i += 4) {
                         if (isAlignedA) {
-                            vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi64(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int64_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int64_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int64_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int64_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -749,23 +749,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 31 < l; i += 32) {
                         if (isAlignedA) {
-                            vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi8(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint8_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint8_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint8_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint8_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -903,23 +903,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -1057,23 +1057,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -1166,23 +1166,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 3 < l; i += 4) {
                         if (isAlignedA) {
-                            vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_add_epi64(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint64_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint64_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint64_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint64_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -1586,23 +1586,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 31 < l; i += 32) {
                         if (isAlignedA) {
-                            vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi8(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int8_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int8_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int8_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int8_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -1740,23 +1740,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -1894,23 +1894,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -2003,23 +2003,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 3 < l; i += 4) {
                         if (isAlignedA) {
-                            vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi64(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int64_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int64_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int64_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int64_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -2180,23 +2180,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 31 < l; i += 32) {
                         if (isAlignedA) {
-                            vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint8_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi8(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint8_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint8_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint8_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint8_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -2334,23 +2334,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -2488,23 +2488,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -2597,23 +2597,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 3 < l; i += 4) {
                         if (isAlignedA) {
-                            vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint64_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_sub_epi64(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint64_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint64_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint64_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint64_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -3040,23 +3040,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_mullo_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -3106,23 +3106,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const int32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_mullo_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](int32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](int32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -3329,23 +3329,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 15 < l; i += 16) {
                         if (isAlignedA) {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint16_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_mullo_epi16(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint16_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint16_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
@@ -3395,23 +3395,23 @@ namespace ezsimd {
                     
                     for (NULL; i + 7 < l; i += 8) {
                         if (isAlignedA) {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
-                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(a + i);
+                            vec_a = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         }
                         
                         if (isAlignedB) {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         } else {
-                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<__m256i*>(ptr));}(b + i);
+                            vec_b = [](const uint32_t* ptr) {return _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr));}(b + i);
                         }
                         
                         vec_c = _mm256_mullo_epi32(vec_a, vec_b);
                         
                         if (isAlignedC) {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_store_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         } else {
-                            [](uint32_t* ptr, const __m128i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
+                            [](uint32_t* ptr, const __m256i vec) {_mm256_storeu_si256(reinterpret_cast<__m256i*>(ptr), vec);}(c + i, vec_c);
                         }
                     }
                     
