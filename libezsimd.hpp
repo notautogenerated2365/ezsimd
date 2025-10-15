@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 
-namespace ezsimd3 {
+namespace ezsimd {
     template <typename T, size_t N>
     constexpr inline size_t arrayLength(T (&)[N]) noexcept {
         return N;
@@ -19,7 +19,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const int8_t* a, const int8_t* b, int8_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int8_t
 
         #pragma region // int16_t
@@ -30,7 +30,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const int16_t* a, const int16_t* b, int16_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int16_t
 
         #pragma region // int32_t
@@ -41,7 +41,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const int32_t* a, const int32_t* b, int32_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int32_t
 
         #pragma region // int64_t
@@ -52,7 +52,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const int64_t* a, const int64_t* b, int64_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int64_t
 
         #pragma region // __int128_t
@@ -63,7 +63,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __int128_t
 
         #pragma region // uint8_t
@@ -74,7 +74,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint8_t
 
         #pragma region // uint16_t
@@ -85,7 +85,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint16_t
 
         #pragma region // uint32_t
@@ -96,7 +96,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint32_t
 
         #pragma region // uint64_t
@@ -107,7 +107,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint64_t
 
         #pragma region // __uint128_t
@@ -118,7 +118,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __uint128_t
 
         #pragma region // float
@@ -129,7 +129,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const float* a, const float* b, float* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // float
 
         #pragma region // double
@@ -140,7 +140,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const double* a, const double* b, double* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // double
 
         #pragma region // long double
@@ -151,7 +151,7 @@ namespace ezsimd3 {
                 addBackend(a.data(), b.data(), c.data(), a.size());
             }
             void add(const long double* a, const long double* b, long double* c, size_t l);
-            #define ADD(a, b, c) add(a, b, c, ezsimd3::arrayLength(a))
+            #define ADD(a, b, c) add(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // long double
     #pragma endregion // add
     
@@ -164,7 +164,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const int8_t* a, const int8_t* b, int8_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int8_t
 
         #pragma region // int16_t
@@ -175,7 +175,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const int16_t* a, const int16_t* b, int16_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int16_t
 
         #pragma region // int32_t
@@ -186,7 +186,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const int32_t* a, const int32_t* b, int32_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int32_t
 
         #pragma region // int64_t
@@ -197,7 +197,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const int64_t* a, const int64_t* b, int64_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int64_t
 
         #pragma region // __int128_t
@@ -208,7 +208,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __int128_t
 
         #pragma region // uint8_t
@@ -219,7 +219,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint8_t
 
         #pragma region // uint16_t
@@ -230,7 +230,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint16_t
 
         #pragma region // uint32_t
@@ -241,7 +241,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint32_t
 
         #pragma region // uint64_t
@@ -252,7 +252,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint64_t
 
         #pragma region // __uint128_t
@@ -263,7 +263,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __uint128_t
 
         #pragma region // float
@@ -274,7 +274,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const float* a, const float* b, float* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // float
 
         #pragma region // double
@@ -285,7 +285,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const double* a, const double* b, double* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // double
 
         #pragma region // long double
@@ -296,7 +296,7 @@ namespace ezsimd3 {
                 subBackend(a.data(), b.data(), c.data(), a.size());
             }
             void sub(const long double* a, const long double* b, long double* c, size_t l);
-            #define SUB(a, b, c) sub(a, b, c, ezsimd3::arrayLength(a))
+            #define SUB(a, b, c) sub(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // long double
     #pragma endregion // sub
     
@@ -309,7 +309,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const int8_t* a, const int8_t* b, int8_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int8_t
 
         #pragma region // int16_t
@@ -320,7 +320,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const int16_t* a, const int16_t* b, int16_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int16_t
 
         #pragma region // int32_t
@@ -331,7 +331,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const int32_t* a, const int32_t* b, int32_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int32_t
 
         #pragma region // int64_t
@@ -342,7 +342,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const int64_t* a, const int64_t* b, int64_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int64_t
 
         #pragma region // __int128_t
@@ -353,7 +353,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __int128_t
 
         #pragma region // uint8_t
@@ -364,7 +364,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint8_t
 
         #pragma region // uint16_t
@@ -375,7 +375,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint16_t
 
         #pragma region // uint32_t
@@ -386,7 +386,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint32_t
 
         #pragma region // uint64_t
@@ -397,7 +397,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint64_t
 
         #pragma region // __uint128_t
@@ -408,7 +408,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __uint128_t
 
         #pragma region // float
@@ -419,7 +419,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const float* a, const float* b, float* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // float
 
         #pragma region // double
@@ -430,7 +430,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const double* a, const double* b, double* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // double
 
         #pragma region // long double
@@ -441,7 +441,7 @@ namespace ezsimd3 {
                 mulBackend(a.data(), b.data(), c.data(), a.size());
             }
             void mul(const long double* a, const long double* b, long double* c, size_t l);
-            #define MUL(a, b, c) mul(a, b, c, ezsimd3::arrayLength(a))
+            #define MUL(a, b, c) mul(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // long double
     #pragma endregion // mul
     
@@ -454,7 +454,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const int8_t* a, const int8_t* b, int8_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int8_t
 
         #pragma region // int16_t
@@ -465,7 +465,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const int16_t* a, const int16_t* b, int16_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int16_t
 
         #pragma region // int32_t
@@ -476,7 +476,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const int32_t* a, const int32_t* b, int32_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int32_t
 
         #pragma region // int64_t
@@ -487,7 +487,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const int64_t* a, const int64_t* b, int64_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // int64_t
 
         #pragma region // __int128_t
@@ -498,7 +498,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __int128_t
 
         #pragma region // uint8_t
@@ -509,7 +509,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint8_t
 
         #pragma region // uint16_t
@@ -520,7 +520,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint16_t
 
         #pragma region // uint32_t
@@ -531,7 +531,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint32_t
 
         #pragma region // uint64_t
@@ -542,7 +542,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // uint64_t
 
         #pragma region // __uint128_t
@@ -553,7 +553,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // __uint128_t
 
         #pragma region // float
@@ -564,7 +564,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const float* a, const float* b, float* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // float
 
         #pragma region // double
@@ -575,7 +575,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const double* a, const double* b, double* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // double
 
         #pragma region // long double
@@ -586,7 +586,7 @@ namespace ezsimd3 {
                 divBackend(a.data(), b.data(), c.data(), a.size());
             }
             void div(const long double* a, const long double* b, long double* c, size_t l);
-            #define DIV(a, b, c) div(a, b, c, ezsimd3::arrayLength(a))
+            #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
         #pragma endregion // long double
     #pragma endregion // div
-} // namespace ezsimd3
+} // namespace ezsimd

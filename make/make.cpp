@@ -21,7 +21,7 @@ void make(ofstream& source, ofstream& header) {
     #include <iostream>
 #endif
 
-#include "libezsimd3.hpp"
+#include "libezsimd.hpp"
 
 #ifndef __GNUC__
     #warning "compiler may not be supported"
@@ -41,7 +41,7 @@ void make(ofstream& source, ofstream& header) {
 #endif
 // __AVX2__ uses same header as __AVX__
 
-namespace ezsimd3 {
+namespace ezsimd {
     template <typename T>
     bool isAligned(const T* ptr, size_t alignment) {
         return reinterpret_cast<std::uintptr_t>(static_cast<const void*>(ptr)) % alignment == 0;
@@ -53,7 +53,7 @@ namespace ezsimd3 {
 #include <vector>
 #include <array>
 
-namespace ezsimd3 {
+namespace ezsimd {
     template <typename T, size_t N>
     constexpr inline size_t arrayLength(T (&)[N]) noexcept {
         return N;
@@ -194,7 +194,7 @@ namespace ezsimd3 {
                 << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
                 << "\n            }"
                 << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
-                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd3::arrayLength(a))"
+                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"
                 << "\n        #pragma endregion // " << numMeta.at(_numType).numName
                 << "\n"
             ;
@@ -209,14 +209,14 @@ namespace ezsimd3 {
         ;
     }
 
-    source << "\n} // namespace ezsimd3";
-    header << "\n} // namespace ezsimd3";
+    source << "\n} // namespace ezsimd";
+    header << "\n} // namespace ezsimd";
 }
 
 int main() {
-    ofstream source("../ezsimd3.hpp");
-    ofstream header("../libezsimd3.hpp");
-    ofstream library("../ezsimd3.cpp");
+    ofstream source("../ezsimd.hpp");
+    ofstream header("../libezsimd.hpp");
+    ofstream library("../ezsimd.cpp");
 
     if (!source.is_open()) {
         cerr << "Error opening output source file\n";
@@ -230,7 +230,7 @@ int main() {
     }
 
     library
-        << "#include \"ezsimd3.hpp\""
+        << "#include \"ezsimd.hpp\""
     ;
 
     make(source, header);

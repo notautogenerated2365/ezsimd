@@ -11,7 +11,7 @@
     #include <iostream>
 #endif
 
-#include "libezsimd3.hpp"
+#include "libezsimd.hpp"
 
 #ifndef __GNUC__
     #warning "compiler may not be supported"
@@ -31,7 +31,7 @@
 #endif
 // __AVX2__ uses same header as __AVX__
 
-namespace ezsimd3 {
+namespace ezsimd {
     template <typename T>
     bool isAligned(const T* ptr, size_t alignment) {
         return reinterpret_cast<std::uintptr_t>(static_cast<const void*>(ptr)) % alignment == 0;
@@ -4192,4 +4192,4 @@ namespace ezsimd3 {
             }
         #pragma endregion // long double
     #pragma endregion // div
-} // namespace ezsimd3
+} // namespace ezsimd
