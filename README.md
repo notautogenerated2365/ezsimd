@@ -100,7 +100,7 @@ Examples:\
     So, if I were to have an array of 100 floats (which are 32-bits long each) for a total\
     length of 3200 bits or 400 bytes, if at runtime the AVX function was picked\
     (which does 256 bits at a time), only 96 of those floats would be processed with AVX.\
-    The remaining 4 would be added at the end inside a simple for loop.\
+    The remaining 4 would be added at the end inside a simple for loop.
 
 This has not been tested in any meaningful capacity.\
 OpenCL/CUDA functions are in the works.
