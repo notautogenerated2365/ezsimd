@@ -1,4 +1,4 @@
-A library/header for simplifying SIMD operations on vectors in C++.\
+A library/header for simplifying SIMD operations on vectors and arrays in C++.\
 Also my first ever GitHub project, I don't really know how any of this works
 
 /\
