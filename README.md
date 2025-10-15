@@ -102,5 +102,10 @@ Examples:\
     (which does 256 bits at a time), only 96 of those floats would be processed with AVX.\
     The remaining 4 would be added at the end inside a simple for loop.
 
+For those unfamiliar with how to compile and use programs that use SIMD operations,\
+you typically have to specify to the compiler to enable certain features.\
+For G++, you have to use additional flags to enable each SIMD type.\
+```-mmmx -msse -msse2 -mavx -mavx2```
+
 This has not been tested in any meaningful capacity.\
 OpenCL/CUDA functions are in the works.
