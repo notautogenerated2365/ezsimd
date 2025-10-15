@@ -1,0 +1,241 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+#include "enums.hpp"
+#include "maps.hpp"
+
+using namespace std;
+
+void make(ofstream& source, ofstream& header) {
+    source << R"(#pragma once
+
+#include <vector>
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <cassert>
+#include <type_traits>
+
+#ifdef EZSIMD_SHOW_FUNC
+    #include <iostream>
+#endif
+
+#include "libezsimd3.hpp"
+
+#ifndef __GNUC__
+    #warning "compiler may not be supported"
+#endif
+
+#ifdef __MMX__
+    #include <mmintrin.h>
+#endif
+#ifdef __SSE__
+    #include <xmmintrin.h>
+#endif
+#ifdef __SSE2__
+    #include <emmintrin.h>
+#endif
+#ifdef __AVX__
+    #include <immintrin.h>
+#endif
+// __AVX2__ uses same header as __AVX__
+
+namespace ezsimd3 {
+    template <typename T>
+    bool isAligned(const T* ptr, size_t alignment) {
+        return reinterpret_cast<std::uintptr_t>(static_cast<const void*>(ptr)) % alignment == 0;
+    })";
+
+    header << R"(#pragma once
+
+#include <cstdint>
+#include <vector>
+#include <array>
+
+namespace ezsimd3 {
+    template <typename T, size_t N>
+    constexpr inline size_t arrayLength(T (&)[N]) noexcept {
+        return N;
+    })";
+
+    opType _opType;
+    numType _numType;
+    arrayType _arrayType;
+    simdType _simdType;
+
+    for (char i = 0; i < 4; i++) { // for each of the 4 opTypes (add, sub, mul, div)
+        _opType = opType(i);
+
+        source
+            << "\n    "
+            << "\n    #pragma region // " << opMeta.at(_opType).name
+        ;
+
+        header
+            << "\n    "
+            << "\n    #pragma region // " << opMeta.at(_opType).name
+        ;
+
+        for (char j = 0; j < 14; j++) { // for each numType
+            _numType = numType(j);
+
+            if (_numType == FLOAT16) {
+                continue;
+                // not supported
+            }
+
+            source
+                << "\n        #pragma region // " << numMeta.at(_numType).numName
+            ;
+
+            header
+                << "\n        #pragma region // " << numMeta.at(_numType).numName
+            ;
+            
+            source
+                << "\n            __attribute__((target(\"default\")))"
+                << "\n            void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
+                << "\n                #ifdef EZSIMD_SHOW_FUNC"
+                << "\n                    std::cout << \"target(\\\"default\\\") "<< opMeta.at(_opType).name << "\\n\";"
+                << "\n                #endif"
+                << "\n                "
+                << "\n                for (size_t i = 0; i < l; i++) {"
+                << "\n                    c[i] = a[i] + b[i];"
+                << "\n                }"
+                << "\n            }"
+            ;
+
+            header
+                << "\n            void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+            ;
+
+            for (char l = 0; l < 5; l++) { // for each simdType
+                _simdType = simdType(l);
+            
+                if (supportedOps.at(_simdType).at(_opType).at(_numType)) {
+                    source
+                        << '\n'
+                        << "\n            #ifdef " << simdMeta.at(_simdType).ifdefMacro
+                        << "\n                __attribute__((target(\"" << simdMeta.at(_simdType).name << "\")))"
+                        << "\n                inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l) {"
+                        << "\n                    #ifdef EZSIMD_SHOW_FUNC"
+                        << "\n                        std::cout << \"target(\\\"" << simdMeta.at(_simdType).name << "\\\") "<< opMeta.at(_opType).name << "\\n\";"
+                        << "\n                    #endif"
+                        << "\n                    "
+                        << "\n                    size_t i = 0;"
+                        << "\n                    " << simdRegTypenames.at(_simdType).at(_numType) << " vec_a;"
+                        << "\n                    " << simdRegTypenames.at(_simdType).at(_numType) << " vec_b;"
+                        << "\n                    " << simdRegTypenames.at(_simdType).at(_numType) << " vec_c;"
+                        << "\n                    const bool isAlignedA = isAligned(a, " << (simdMeta.at(_simdType).bitSize / 8) << ");"
+                        << "\n                    const bool isAlignedB = isAligned(b, " << (simdMeta.at(_simdType).bitSize / 8) << ");"
+                        << "\n                    const bool isAlignedC = isAligned(c, " << (simdMeta.at(_simdType).bitSize / 8) << ");"
+                        << "\n                    "
+                        << "\n                    for (NULL; i + " << ((simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) - 1) << " < l; i += " << (simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) << ") {"
+                        << "\n                        if (isAlignedA) {"
+                        << "\n                            vec_a = " << functions.at(_simdType).at(PACK_ALIGNED).at(_numType) << "(a + i);"
+                        << "\n                        } else {"
+                        << "\n                            vec_a = " << functions.at(_simdType).at(PACK_UNALIGNED).at(_numType) << "(a + i);"
+                        << "\n                        }"
+                        << "\n                        "
+                        << "\n                        if (isAlignedB) {"
+                        << "\n                            vec_b = " << functions.at(_simdType).at(PACK_ALIGNED).at(_numType) << "(b + i);"
+                        << "\n                        } else {"
+                        << "\n                            vec_b = " << functions.at(_simdType).at(PACK_UNALIGNED).at(_numType) << "(b + i);"
+                        << "\n                        }"
+                        << "\n                        "
+                        << "\n                        vec_c = " << functions.at(_simdType).at(_opType).at(_numType) << "(vec_a, vec_b);"
+                        << "\n                        "
+                        << "\n                        if (isAlignedC) {"
+                        << "\n                            " << functions.at(_simdType).at(UNPACK_ALIGNED).at(_numType) << "(c + i, vec_c);"
+                        << "\n                        } else {"
+                        << "\n                            " << functions.at(_simdType).at(UNPACK_UNALIGNED).at(_numType) << "(c + i, vec_c);"
+                        << "\n                        }"
+                        << "\n                    }"
+                        << "\n                    "
+                        << "\n                    for (NULL; i < l; i++) {"
+                        << "\n                        c[i] = a[i] + b[i];"
+                        << "\n                    }"
+                    ;
+
+                    if (_simdType == MMX) {
+                        source
+                            << "\n                    "
+                            << "\n                    _mm_empty();"
+                        ;
+                    }
+
+                    source
+                        << "\n                }"
+                        << "\n            #endif // " << simdMeta.at(_simdType).ifdefMacro
+                    ;
+                }
+            }
+
+            source
+                << "\n"
+                << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c) {"
+                << "\n                assert(a.size() == b.size());"
+                << "\n                assert(c.size() >= a.size());"
+                << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
+                << "\n            }"
+                << "\n            "
+                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
+                << "\n                " << opMeta.at(_opType).name << "Backend(a, b, c, l);"
+                << "\n            }"
+                << "\n        #pragma endregion // " << numMeta.at(_numType).numName
+                << "\n"
+            ;
+
+            header
+                << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c);"
+                << "\n            template <size_t S>"
+                << "\n            inline void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c) {"
+                << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
+                << "\n            }"
+                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd3::arrayLength(a))"
+                << "\n        #pragma endregion // " << numMeta.at(_numType).numName
+                << "\n"
+            ;
+        }
+
+        source
+            << "    #pragma endregion // " << opMeta.at(_opType).name
+        ;
+
+        header
+            << "    #pragma endregion // " << opMeta.at(_opType).name
+        ;
+    }
+
+    source << "\n} // namespace ezsimd3";
+    header << "\n} // namespace ezsimd3";
+}
+
+int main() {
+    ofstream source("../ezsimd3.hpp");
+    ofstream header("../libezsimd3.hpp");
+    ofstream library("../ezsimd3.cpp");
+
+    if (!source.is_open()) {
+        cerr << "Error opening output source file\n";
+        return 1;
+    } if (!header.is_open()) {
+        cerr << "Error opening output header file\n";
+        return 1;
+    } if (!library.is_open()) {
+        cerr << "Error opening output library file\n";
+        return 1;
+    }
+
+    library
+        << "#include \"ezsimd3.hpp\""
+    ;
+
+    make(source, header);
+    source.close();
+    header.close();
+    library.close();
+    return 0;
+}
