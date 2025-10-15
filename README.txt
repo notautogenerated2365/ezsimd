@@ -1,14 +1,14 @@
 A library/header for simplifying SIMD operations on vectors and arrays in C++.
 Also my first ever GitHub project, I don't really know how any of this works
 
-+-- make/:           contains program I used to make the ezsimd source and header files
-    +-- make.cpp:    the program
-    +-- enums.hpp:   enum definitions for organizing data
-    +-- maps.hpp:    maps defining SIMD/operation/number type support among other important thing
-    +-- makefile:    will compile and run the program to produce the three files below
-+-- ezsimd.cpp:      can be compiled into a static or shared library
-+-- libezsimd.hpp:   can be included into a project that uses the static or shared library
-+-- ezsimd.hpp:      can be included into a project without using static or shared library
++-- make/           contains program I used to make the ezsimd source and header files
+    +-- make.cpp    the program
+    +-- enums.hpp   enum definitions for organizing data
+    +-- maps.hpp    maps defining SIMD/operation/number type support among other important things
+    +-- makefile    will compile and run the program to produce the three files below
++-- ezsimd.cpp      can be compiled into a static or shared library
++-- libezsimd.hpp   can be included into a project that uses the static or shared library
++-- ezsimd.hpp      can be included into a project without using static or shared library
 
 This library defines functions for addition, subtraction, multiplication, and division
 of 8 to 128-bit signed/unsigned integers and 32 to 128-bit floats.
@@ -98,7 +98,7 @@ SIMD register are processed with a scalar loop (the normal way).
 So, if I were to have an array of 100 floats (which are 32-bits long each) for a total
 length of 3200 bits or 400 bytes, if at runtime the AVX function was picked
 (which does 256 bits at a time), only 96 of those floats would be processed with AVX.
-The remaining 4 would be added at the end inside a simple for loop.
+The remaining 4 floats would be added at the end inside a simple for loop.
 
 For those unfamiliar with how to compile and use programs that use SIMD operations,
 you typically have to specify to the compiler to enable certain features.
