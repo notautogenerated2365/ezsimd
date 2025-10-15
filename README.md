@@ -102,4 +102,6 @@ Examples:\
     (which does 256 bits at a time), only 96 of those floats would be processed with AVX.\
     The remaining 4 would be added at the end inside a simple for loop.\
 \
+
+This has not been tested in any meaningful capacity.\
 OpenCL/CUDA functions are in the works.
