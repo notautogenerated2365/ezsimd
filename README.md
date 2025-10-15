@@ -37,32 +37,32 @@ and all the datatypes including:\
     ```__uint128_t```\
     ```float```\
     ```double```\
-    ```long double```\
+    ```long double```
     
 \
 For std::vector:\
-    ezsimd::add(const std::vector\<T\>& a, const std::vector\<T\>& b, std::vector\<T\>& c)\
-    where T is the same across all three vectors,\
-    T is a supported type,\
-    a and b are the same length,\
-    and c is the same size as or longer than a.\
-    The result is written to c.\
+    ```ezsimd::add(const std::vector\<T\>& a, const std::vector\<T\>& b, std::vector\<T\>& c)```\
+    where ```T``` is the same across all three vectors,\
+    ```T``` is a supported type,\
+    ```a``` and ```b``` are the same length,\
+    and ```c``` is the same size as or longer than ```a```.\
+    The result is written to ```c```.\
 \
 For std::array:\
-    ezsimd::add\<size_t S\>(const std::array\<T, S\>& a, const std::array\<T, S\>& b, std::array\<T, S\>& c)\
-    where T is the same across all three arrays,\
-    T is a supported type,\
-    S is the length of the arrays,\
+    ```ezsimd::add\<size_t S\>(const std::array\<T, S\>& a, const std::array\<T, S\>& b, std::array\<T, S\>& c)```\
+    where ```T``` is the same across all three arrays,\
+    ```T``` is a supported type,\
+    ```S``` is the length of the arrays,\
     and all three arrays are the same length\
-    The result is written to c.\
+    The result is written to ```c```.\
 \
 For C-style array:\
-    ezsimd::add(const T* a, const T* b, T* c, size_t l)\
-    where T is the same across all three arrays,\
-    T is a supported type,\
-    and l is less than or equal to the sizes of all three arrays.\
-    The length of these arrays is not checked against l.\
-    The result is written to c.\
+    ```ezsimd::add(const T* a, const T* b, T* c, size_t l)```\
+    where ```T``` is the same across all three arrays,\
+    ```T``` is a supported type,\
+    and ```l``` is less than or equal to the sizes of all three arrays.\
+    The length of these arrays is not checked against ```l```.\
+    The result is written to ```c```.\
 \
 These functions automatically detect if the arrays/vectors are aligned to the right boundary\
 to use aligned load/store intrinsics.\
@@ -70,26 +70,26 @@ If they aren't, a small performance loss may be incurred by using unaligned intr
 but the library works the same exact way\
 \
 Examples:\
-    std::vector\<float\> a = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9};\
-    std::vector\<float\> b = {9.9, 8.8, 7.7, 6.6, 5.5, 4.4, 3.3, 2.2, 1.1};\
-    std::vector\<float\> c(a.size());\
-    ezsimd::add(a, b, c);\
-    // c now contains {11, 11, 11, 11, 11, 11, 11, 11, 11}\
+    ```std::vector\<float\> a = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9};```\
+    ```std::vector\<float\> b = {9.9, 8.8, 7.7, 6.6, 5.5, 4.4, 3.3, 2.2, 1.1};```\
+    ```std::vector\<float\> c(a.size());```\
+    ```ezsimd::add(a, b, c);```\
+    ```// c now contains {11, 11, 11, 11, 11, 11, 11, 11, 11}```\
 \
-    std::array\<int32_t, 10\> a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};\
-    std::array\<int32_t, 10\> b = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};\
-    std::array\<int32_t, 10\> c;\
-    ezsimd::add\<10\>(a, b, c);\
-    // c now contains {9, 9, 9, 9, 9, 9, 9, 9, 9, 9}\
+    ```std::array\<int32_t, 10\> a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};```\
+    ```std::array\<int32_t, 10\> b = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};```\
+    ```std::array\<int32_t, 10\> c;\```
+    ```ezsimd::add\<10\>(a, b, c);```\
+    ```// c now contains {9, 9, 9, 9, 9, 9, 9, 9, 9, 9}```\
 \
-    int32_t a[] = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20};\
-    int32_t b[] = {20, 18, 16, 14, 12, 10, 9, 6, 4, 2};\
-    int32_t c[10];\
-    ezsimd::add(a, b, c, 10);\
-    // OR\
-    ezsimd::ADD(a, b, c);\
-    // macro that automatically uses the length of a\
-    // doesn't work on arrays that have decayed to pointers\
+    ```int32_t a[] = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20};```\
+    ```int32_t b[] = {20, 18, 16, 14, 12, 10, 9, 6, 4, 2};```\
+    ```int32_t c[10];```\
+    ```ezsimd::add(a, b, c, 10);```\
+    ```// OR```\
+    ```ezsimd::ADD(a, b, c);```\
+    ```// macro that automatically uses the length of a```\
+    ```// doesn't work on arrays that have decayed to pointers```\
 \
     For these examples, I used unaligned arrays/vectors.\
     If I were to use aligned ones, it would work the same exact way.\
