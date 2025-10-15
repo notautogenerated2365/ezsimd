@@ -1,5 +1,5 @@
 A library/header for simplifying SIMD operations on vectors in C++.\
-Also my first ever GitHub project, I don't really know how any of this works\
+Also my first ever GitHub project, I don't really know how any of this works
 
 /\
 +-- make/           contains program I used to make the ezsimd source and header files\
@@ -101,4 +101,4 @@ Examples:\
     (which does 256 bits at a time), only 96 of those floats would be processed with AVX.\
     The remaining 4 would be added at the end inside a simple for loop.\
 \
-OpenCL/CUDA functions are in the works.\
+OpenCL/CUDA functions are in the works.
