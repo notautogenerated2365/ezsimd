@@ -23,19 +23,6 @@ void make(ofstream& source, ofstream& header) {
 
 #include "libezsimd.hpp"
 
-#if defined(__clang__)
-    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
-
-    #ifdef __SSE2__
-        #undef __SSE2__
-    #endif
-    #ifdef __AVX2__
-        #undef __AVX2__
-    #endif
-#elif !(defined(__GNUC__) && !defined(__clang__))
-    #warning "compiler may not be supported"
-#endif
-
 // __AVX2__ uses same header as __AVX__
 #if defined(__AVX__)
     #include <immintrin.h>
@@ -58,6 +45,19 @@ namespace ezsimd {
 #include <cstdint>
 #include <vector>
 #include <array>
+
+#if defined(__clang__)
+    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
+
+    #ifdef __SSE2__
+        #undef __SSE2__
+    #endif
+    #ifdef __AVX2__
+        #undef __AVX2__
+    #endif
+#elif !(defined(__GNUC__) && !defined(__clang__))
+    #warning "compiler may not be supported"
+#endif
 
 namespace ezsimd {
     template <typename T, size_t N>
@@ -113,6 +113,7 @@ namespace ezsimd {
             ;
 
             header
+                << "\n            __attribute__((target(\"default\")))"
                 << "\n            extern inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
             ;
 
@@ -120,6 +121,14 @@ namespace ezsimd {
                 _simdType = simdType(l);
             
                 if (supportedOps.at(_simdType).at(_opType).at(_numType)) {
+                    header
+                        << '\n'
+                        << "\n            #ifdef " << simdMeta.at(_simdType).ifdefMacro
+                        << "\n                __attribute__((target(\"" << simdMeta.at(_simdType).name << "\")))"
+                        << "\n                inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l);"
+                        << "\n            #endif // " << simdMeta.at(_simdType).ifdefMacro
+                    ;
+
                     source
                         << '\n'
                         << "\n            #ifdef " << simdMeta.at(_simdType).ifdefMacro

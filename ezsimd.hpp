@@ -13,19 +13,6 @@
 
 #include "libezsimd.hpp"
 
-#if defined(__clang__)
-    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
-
-    #ifdef __SSE2__
-        #undef __SSE2__
-    #endif
-    #ifdef __AVX2__
-        #undef __AVX2__
-    #endif
-#elif !(defined(__GNUC__) && !defined(__clang__))
-    #warning "compiler may not be supported"
-#endif
-
 // __AVX2__ uses same header as __AVX__
 #if defined(__AVX__)
     #include <immintrin.h>
