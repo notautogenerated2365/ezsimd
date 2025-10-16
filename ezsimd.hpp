@@ -13,23 +13,29 @@
 
 #include "libezsimd.hpp"
 
-#if !(defined(__GNUC__) && !defined(__clang__))
+#if defined(__clang__)
+    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
+
+    #ifdef __SSE2__
+        #undef __SSE2__
+    #endif
+    #ifdef __AVX2__
+        #undef __AVX2__
+    #endif
+#elif !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
 #endif
 
-#ifdef __MMX__
+// __AVX2__ uses same header as __AVX__
+#if defined(__AVX__)
+    #include <immintrin.h>
+#elif defined(__SSE2__)
+    #include <emmintrin.h>
+#elif defined(__SSE__)
+    #include <xmmintrin.h>
+#elif defined(__MMX__)
     #include <mmintrin.h>
 #endif
-#ifdef __SSE__
-    #include <xmmintrin.h>
-#endif
-#ifdef __SSE2__
-    #include <emmintrin.h>
-#endif
-#ifdef __AVX__
-    #include <immintrin.h>
-#endif
-// __AVX2__ uses same header as __AVX__
 
 namespace ezsimd {
     template <typename T>
@@ -42,7 +48,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -54,7 +60,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -65,7 +71,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -87,7 +93,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -99,7 +105,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -110,7 +116,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -132,7 +138,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -142,7 +148,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -153,7 +159,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 31 < l; i += 32) {
+                    for (; i + 31 < l; i += 32) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -175,7 +181,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -196,7 +202,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -208,7 +214,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -219,7 +225,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -241,7 +247,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -253,7 +259,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -264,7 +270,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -286,7 +292,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -296,7 +302,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -307,7 +313,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -329,7 +335,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -350,7 +356,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -362,7 +368,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -373,7 +379,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -395,7 +401,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -407,7 +413,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -418,7 +424,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -440,7 +446,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -450,7 +456,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -461,7 +467,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -483,7 +489,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -504,7 +510,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -516,7 +522,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const int64_t* a, const int64_t* b, int64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -527,7 +533,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const int64_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -549,7 +555,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -559,7 +565,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const int64_t* a, const int64_t* b, int64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -570,7 +576,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -592,7 +598,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -613,7 +619,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -636,7 +642,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -648,7 +654,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -659,7 +665,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -681,7 +687,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -693,7 +699,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -704,7 +710,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -726,7 +732,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -736,7 +742,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -747,7 +753,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 31 < l; i += 32) {
+                    for (; i + 31 < l; i += 32) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -769,7 +775,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -790,7 +796,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -802,7 +808,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -813,7 +819,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -835,7 +841,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -847,7 +853,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -858,7 +864,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -880,7 +886,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -890,7 +896,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -901,7 +907,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -923,7 +929,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -944,7 +950,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -956,7 +962,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -967,7 +973,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -989,7 +995,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -1001,7 +1007,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1012,7 +1018,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1034,7 +1040,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1044,7 +1050,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1055,7 +1061,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -1077,7 +1083,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1098,7 +1104,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1110,7 +1116,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1121,7 +1127,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const uint64_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1143,7 +1149,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1153,7 +1159,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void addBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1164,7 +1170,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -1186,7 +1192,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1207,7 +1213,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1230,7 +1236,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1242,7 +1248,7 @@ namespace ezsimd {
                 __attribute__((target("sse")))
                 inline void addBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1253,7 +1259,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm_load_ps(a + i);
                         } else {
@@ -1275,7 +1281,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1285,7 +1291,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void addBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1296,7 +1302,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_ps(a + i);
                         } else {
@@ -1318,7 +1324,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1339,7 +1345,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1351,7 +1357,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void addBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1362,7 +1368,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = _mm_load_pd(a + i);
                         } else {
@@ -1384,7 +1390,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1394,7 +1400,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void addBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") add\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") add\n";
                     #endif
                     
                     size_t i = 0;
@@ -1405,7 +1411,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_pd(a + i);
                         } else {
@@ -1427,7 +1433,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1448,7 +1454,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void addBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") add\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") add\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1473,7 +1479,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1485,7 +1491,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1496,7 +1502,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -1518,7 +1524,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -1530,7 +1536,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1541,7 +1547,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1563,7 +1569,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1573,7 +1579,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const int8_t* a, const int8_t* b, int8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1584,7 +1590,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 31 < l; i += 32) {
+                    for (; i + 31 < l; i += 32) {
                         if (isAlignedA) {
                             vec_a = [](const int8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -1606,7 +1612,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1627,7 +1633,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1639,7 +1645,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1650,7 +1656,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -1672,7 +1678,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -1684,7 +1690,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1695,7 +1701,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1717,7 +1723,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1727,7 +1733,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1738,7 +1744,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -1760,7 +1766,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1781,7 +1787,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1793,7 +1799,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1804,7 +1810,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -1826,7 +1832,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -1838,7 +1844,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1849,7 +1855,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1871,7 +1877,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1881,7 +1887,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1892,7 +1898,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -1914,7 +1920,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1935,7 +1941,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -1947,7 +1953,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const int64_t* a, const int64_t* b, int64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -1958,7 +1964,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const int64_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -1980,7 +1986,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -1990,7 +1996,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const int64_t* a, const int64_t* b, int64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2001,7 +2007,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -2023,7 +2029,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2044,7 +2050,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2067,7 +2073,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2079,7 +2085,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2090,7 +2096,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -2112,7 +2118,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -2124,7 +2130,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2135,7 +2141,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -2157,7 +2163,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2167,7 +2173,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2178,7 +2184,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 31 < l; i += 32) {
+                    for (; i + 31 < l; i += 32) {
                         if (isAlignedA) {
                             vec_a = [](const uint8_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -2200,7 +2206,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2221,7 +2227,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2233,7 +2239,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2244,7 +2250,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -2266,7 +2272,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -2278,7 +2284,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2289,7 +2295,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -2311,7 +2317,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2321,7 +2327,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2332,7 +2338,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -2354,7 +2360,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2375,7 +2381,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2387,7 +2393,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2398,7 +2404,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -2420,7 +2426,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -2432,7 +2438,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2443,7 +2449,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -2465,7 +2471,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2475,7 +2481,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2486,7 +2492,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -2508,7 +2514,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2529,7 +2535,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2541,7 +2547,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2552,7 +2558,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = [](const uint64_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -2574,7 +2580,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2584,7 +2590,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void subBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2595,7 +2601,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint64_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -2617,7 +2623,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2638,7 +2644,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2661,7 +2667,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2673,7 +2679,7 @@ namespace ezsimd {
                 __attribute__((target("sse")))
                 inline void subBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2684,7 +2690,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm_load_ps(a + i);
                         } else {
@@ -2706,7 +2712,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2716,7 +2722,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void subBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2727,7 +2733,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_ps(a + i);
                         } else {
@@ -2749,7 +2755,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2770,7 +2776,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2782,7 +2788,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void subBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2793,7 +2799,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = _mm_load_pd(a + i);
                         } else {
@@ -2815,7 +2821,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2825,7 +2831,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void subBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") sub\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") sub\n";
                     #endif
                     
                     size_t i = 0;
@@ -2836,7 +2842,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_pd(a + i);
                         } else {
@@ -2858,7 +2864,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -2879,7 +2885,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void subBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") sub\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") sub\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2904,7 +2910,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2927,7 +2933,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -2939,7 +2945,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -2950,7 +2956,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -2972,7 +2978,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -2984,7 +2990,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -2995,7 +3001,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -3017,7 +3023,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3027,7 +3033,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3038,7 +3044,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const int16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -3060,7 +3066,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3081,7 +3087,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3093,7 +3099,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void mulBackend(const int32_t* a, const int32_t* b, int32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3104,7 +3110,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const int32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -3126,7 +3132,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3147,7 +3153,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3170,7 +3176,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3193,7 +3199,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3216,7 +3222,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3228,7 +3234,7 @@ namespace ezsimd {
                 __attribute__((target("mmx")))
                 inline void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"mmx\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"mmx\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3239,7 +3245,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 8);
                     const bool isAlignedC = isAligned(c, 8);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return *reinterpret_cast<const __m64*>(ptr);}(a + i);
                         } else {
@@ -3261,7 +3267,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                     
@@ -3273,7 +3279,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3284,7 +3290,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm_load_si128(reinterpret_cast<const __m128i*>(ptr));}(a + i);
                         } else {
@@ -3306,7 +3312,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3316,7 +3322,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3327,7 +3333,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 15 < l; i += 16) {
+                    for (; i + 15 < l; i += 16) {
                         if (isAlignedA) {
                             vec_a = [](const uint16_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -3349,7 +3355,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3370,7 +3376,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3382,7 +3388,7 @@ namespace ezsimd {
                 __attribute__((target("avx2")))
                 inline void mulBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3393,7 +3399,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = [](const uint32_t* ptr) {return _mm256_load_si256(reinterpret_cast<const __m256i*>(ptr));}(a + i);
                         } else {
@@ -3415,7 +3421,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3436,7 +3442,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3459,7 +3465,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3482,7 +3488,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3494,7 +3500,7 @@ namespace ezsimd {
                 __attribute__((target("sse")))
                 inline void mulBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3505,7 +3511,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm_load_ps(a + i);
                         } else {
@@ -3527,7 +3533,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3537,7 +3543,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void mulBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3548,7 +3554,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_ps(a + i);
                         } else {
@@ -3570,7 +3576,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3591,7 +3597,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3603,7 +3609,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void mulBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3614,7 +3620,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = _mm_load_pd(a + i);
                         } else {
@@ -3636,7 +3642,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3646,7 +3652,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void mulBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") mul\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") mul\n";
                     #endif
                     
                     size_t i = 0;
@@ -3657,7 +3663,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_pd(a + i);
                         } else {
@@ -3679,7 +3685,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -3700,7 +3706,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void mulBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") mul\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") mul\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3725,7 +3731,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3748,7 +3754,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3771,7 +3777,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3794,7 +3800,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3817,7 +3823,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3840,7 +3846,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3863,7 +3869,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3886,7 +3892,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3909,7 +3915,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3932,7 +3938,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3955,7 +3961,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -3967,7 +3973,7 @@ namespace ezsimd {
                 __attribute__((target("sse")))
                 inline void divBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse\") div\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse\") div\n";
                     #endif
                     
                     size_t i = 0;
@@ -3978,7 +3984,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm_load_ps(a + i);
                         } else {
@@ -4000,7 +4006,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -4010,7 +4016,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void divBackend(const float* a, const float* b, float* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") div\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") div\n";
                     #endif
                     
                     size_t i = 0;
@@ -4021,7 +4027,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 7 < l; i += 8) {
+                    for (; i + 7 < l; i += 8) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_ps(a + i);
                         } else {
@@ -4043,7 +4049,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -4064,7 +4070,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {
@@ -4076,7 +4082,7 @@ namespace ezsimd {
                 __attribute__((target("sse2")))
                 inline void divBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"sse2\") div\n";
+                        EZSIMD_SHOW_FUNC << "target(\"sse2\") div\n";
                     #endif
                     
                     size_t i = 0;
@@ -4087,7 +4093,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 16);
                     const bool isAlignedC = isAligned(c, 16);
                     
-                    for (NULL; i + 1 < l; i += 2) {
+                    for (; i + 1 < l; i += 2) {
                         if (isAlignedA) {
                             vec_a = _mm_load_pd(a + i);
                         } else {
@@ -4109,7 +4115,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -4119,7 +4125,7 @@ namespace ezsimd {
                 __attribute__((target("avx")))
                 inline void divBackend(const double* a, const double* b, double* c, const size_t l) {
                     #ifdef EZSIMD_SHOW_FUNC
-                        std::cout << "target(\"avx\") div\n";
+                        EZSIMD_SHOW_FUNC << "target(\"avx\") div\n";
                     #endif
                     
                     size_t i = 0;
@@ -4130,7 +4136,7 @@ namespace ezsimd {
                     const bool isAlignedB = isAligned(b, 32);
                     const bool isAlignedC = isAligned(c, 32);
                     
-                    for (NULL; i + 3 < l; i += 4) {
+                    for (; i + 3 < l; i += 4) {
                         if (isAlignedA) {
                             vec_a = _mm256_load_pd(a + i);
                         } else {
@@ -4152,7 +4158,7 @@ namespace ezsimd {
                         }
                     }
                     
-                    for (NULL; i < l; i++) {
+                    for (; i < l; i++) {
                         c[i] = a[i] + b[i];
                     }
                 }
@@ -4173,7 +4179,7 @@ namespace ezsimd {
             __attribute__((target("default")))
             inline void divBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
-                    std::cout << "target(\"default\") div\n";
+                    EZSIMD_SHOW_FUNC << "target(\"default\") div\n";
                 #endif
                 
                 for (size_t i = 0; i < l; i++) {

@@ -23,23 +23,29 @@ void make(ofstream& source, ofstream& header) {
 
 #include "libezsimd.hpp"
 
-#if !(defined(__GNUC__) && !defined(__clang__))
+#if defined(__clang__)
+    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
+
+    #ifdef __SSE2__
+        #undef __SSE2__
+    #endif
+    #ifdef __AVX2__
+        #undef __AVX2__
+    #endif
+#elif !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
 #endif
 
-#ifdef __MMX__
+// __AVX2__ uses same header as __AVX__
+#if defined(__AVX__)
+    #include <immintrin.h>
+#elif defined(__SSE2__)
+    #include <emmintrin.h>
+#elif defined(__SSE__)
+    #include <xmmintrin.h>
+#elif defined(__MMX__)
     #include <mmintrin.h>
 #endif
-#ifdef __SSE__
-    #include <xmmintrin.h>
-#endif
-#ifdef __SSE2__
-    #include <emmintrin.h>
-#endif
-#ifdef __AVX__
-    #include <immintrin.h>
-#endif
-// __AVX2__ uses same header as __AVX__
 
 namespace ezsimd {
     template <typename T>
@@ -97,7 +103,7 @@ namespace ezsimd {
                 << "\n            __attribute__((target(\"default\")))"
                 << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
                 << "\n                #ifdef EZSIMD_SHOW_FUNC"
-                << "\n                    std::cout << \"target(\\\"default\\\") "<< opMeta.at(_opType).name << "\\n\";"
+                << "\n                    EZSIMD_SHOW_FUNC << \"target(\\\"default\\\") "<< opMeta.at(_opType).name << "\\n\";"
                 << "\n                #endif"
                 << "\n                "
                 << "\n                for (size_t i = 0; i < l; i++) {"
@@ -120,7 +126,7 @@ namespace ezsimd {
                         << "\n                __attribute__((target(\"" << simdMeta.at(_simdType).name << "\")))"
                         << "\n                inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l) {"
                         << "\n                    #ifdef EZSIMD_SHOW_FUNC"
-                        << "\n                        std::cout << \"target(\\\"" << simdMeta.at(_simdType).name << "\\\") "<< opMeta.at(_opType).name << "\\n\";"
+                        << "\n                        EZSIMD_SHOW_FUNC << \"target(\\\"" << simdMeta.at(_simdType).name << "\\\") "<< opMeta.at(_opType).name << "\\n\";"
                         << "\n                    #endif"
                         << "\n                    "
                         << "\n                    size_t i = 0;"
@@ -131,7 +137,7 @@ namespace ezsimd {
                         << "\n                    const bool isAlignedB = isAligned(b, " << (simdMeta.at(_simdType).bitSize / 8) << ");"
                         << "\n                    const bool isAlignedC = isAligned(c, " << (simdMeta.at(_simdType).bitSize / 8) << ");"
                         << "\n                    "
-                        << "\n                    for (NULL; i + " << ((simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) - 1) << " < l; i += " << (simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) << ") {"
+                        << "\n                    for (; i + " << ((simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) - 1) << " < l; i += " << (simdMeta.at(_simdType).bitSize / numMeta.at(_numType).bitSize) << ") {"
                         << "\n                        if (isAlignedA) {"
                         << "\n                            vec_a = " << functions.at(_simdType).at(PACK_ALIGNED).at(_numType) << "(a + i);"
                         << "\n                        } else {"
@@ -153,7 +159,7 @@ namespace ezsimd {
                         << "\n                        }"
                         << "\n                    }"
                         << "\n                    "
-                        << "\n                    for (NULL; i < l; i++) {"
+                        << "\n                    for (; i < l; i++) {"
                         << "\n                        c[i] = a[i] + b[i];"
                         << "\n                    }"
                     ;
