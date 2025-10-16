@@ -12,6 +12,9 @@ void make(ofstream& source, ofstream& header) {
 
 #include <vector>
 #include <array>
+#if __cplusplus >= 202002L
+    #include <span>
+#endif
 #include <cstdint>
 #include <cstring>
 #include <cassert>
@@ -45,6 +48,9 @@ namespace ezsimd {
 #include <cstdint>
 #include <vector>
 #include <array>
+#if __cplusplus >= 202002L
+    #include <span>
+#endif
 
 #if defined(__clang__)
     #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default, avx, and avx2 targets"
@@ -117,7 +123,7 @@ namespace ezsimd {
 
             header
                 << "\n            __attribute__((target(\"default\")))"
-                << "\n            extern inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
             ;
 
             for (char l = 0; l < 5; l++) { // for each simdType
@@ -209,7 +215,7 @@ namespace ezsimd {
                 << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c);"
                 << "\n            template <size_t S>"
                 << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c) {"
-                << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
+                << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), S);"
                 << "\n            }"
                 << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
                 << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"
