@@ -8,16 +8,19 @@
 #endif
 
 #if defined(__clang__)
-    #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default, avx, and avx2 targets"
+    #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default and best supported SIMD"
 
-    #ifdef __MMX__
+    #if (defined(__MMX__) && defined(__SSE2__) && defined(__AVX2__))
+        #undef __MMX__
+        #undef __SSE2__
+    #elif defined(__SSE2__)
+        #undef __MMX__
+    #elif defined(__MMX__) && defined(__AVX2__)
         #undef __MMX__
     #endif
-    #ifdef __SSE__
+    
+    #if defined(__AVX__)
         #undef __SSE__
-    #endif
-    #ifdef __SSE2__
-        #undef __SSE2__
     #endif
 #elif !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
