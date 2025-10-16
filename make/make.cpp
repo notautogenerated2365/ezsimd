@@ -56,7 +56,7 @@ namespace ezsimd {
 #endif
 
 #if defined(__clang__)
-    #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default and best supported SIMD"
+    #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default and best supported SIMD. use g++ for best results."
 
     #if (defined(__MMX__) && defined(__SSE2__) && defined(__AVX2__))
         #undef __MMX__
@@ -66,12 +66,12 @@ namespace ezsimd {
     #elif defined(__MMX__) && defined(__AVX2__)
         #undef __MMX__
     #endif
-    
+
     #if defined(__AVX__)
         #undef __SSE__
     #endif
 #elif !(defined(__GNUC__) && !defined(__clang__))
-    #warning "compiler may not be supported"
+    #warning "compiler may not be supported. use g++ for best results."
 #endif
 
 namespace ezsimd {
