@@ -2,9 +2,6 @@
 
 #include <vector>
 #include <array>
-#if __cplusplus >= 202002L
-    #include <span>
-#endif
 #include <cstdint>
 #include <cstring>
 #include <cassert>

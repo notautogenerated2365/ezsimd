@@ -127,7 +127,8 @@ This can save space if you know that the computers running your program will alw
 SSE/SSE2 or AVX/AVX2. Realisticly, SSE2 was first used in the year 2000, so any computer that can
 even run your program in the first place probably supports SSE2 in place of MMX. AVX was first used in 2011
 and AVX2 was first used in 2013, so in most cases you will want to keep the SSE and SSE2 functions
-as a fallback in case your program gets distributed to an extra old computer.
+as a fallback in case your program gets distributed to an extra old computer. The default target function
+(scalar) must exist for the code to compile.
 
 If the header or library is compiled with the EZSIMD_SHOW_FUNC macro defined as the name of an ostream,
 like std::cout, then upon every function call, the library will output which target function is being used

@@ -7,14 +7,11 @@
 
 using namespace std;
 
-void make(ofstream& source, ofstream& header) {
+void make(ofstream& source, ofstream& header, ofstream& templ) {
     source << R"(#pragma once
 
 #include <vector>
 #include <array>
-#if __cplusplus >= 202002L
-    #include <span>
-#endif
 #include <cstdint>
 #include <cstring>
 #include <cassert>
@@ -51,9 +48,6 @@ namespace ezsimd {
 #include <cstdint>
 #include <vector>
 #include <array>
-#if __cplusplus >= 202002L
-    #include <span>
-#endif
 
 #if defined(__clang__)
     #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default and best supported SIMD. use g++ for best results."
@@ -73,6 +67,18 @@ namespace ezsimd {
 #elif !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported. use g++ for best results."
 #endif
+
+namespace ezsimd {
+    template <typename T, size_t N>
+    constexpr inline size_t arrayLength(T (&)[N]) noexcept;)";
+
+    templ << R"(#pragma once
+
+#include <cstdint>
+#include <array>
+
+// all backend functions must be declared for templated frontends to work properly
+// templated functions declared in libezsimd.hpp, defined in this file
 
 namespace ezsimd {
     template <typename T, size_t N>
@@ -98,6 +104,11 @@ namespace ezsimd {
             << "\n    #pragma region // " << opMeta.at(_opType).name
         ;
 
+        templ
+            << "\n    "
+            << "\n    #pragma region // " << opMeta.at(_opType).name
+        ;
+
         for (char j = 0; j < 14; j++) { // for each numType
             _numType = numType(j);
 
@@ -111,6 +122,10 @@ namespace ezsimd {
             ;
 
             header
+                << "\n        #pragma region // " << numMeta.at(_numType).numName
+            ;
+
+            templ
                 << "\n        #pragma region // " << numMeta.at(_numType).numName
             ;
             
@@ -136,12 +151,12 @@ namespace ezsimd {
                 _simdType = simdType(l);
             
                 if (supportedOps.at(_simdType).at(_opType).at(_numType)) {
-                    header
-                        << '\n'
+                    templ
                         << "\n            #ifdef " << simdMeta.at(_simdType).ifdefMacro
                         << "\n                __attribute__((target(\"" << simdMeta.at(_simdType).name << "\")))"
                         << "\n                inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l);"
                         << "\n            #endif // " << simdMeta.at(_simdType).ifdefMacro
+                        << '\n'
                     ;
 
                     source
@@ -220,11 +235,18 @@ namespace ezsimd {
             header
                 << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c);"
                 << "\n            template <size_t S>"
+                << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c);"
+                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"
+                << "\n        #pragma endregion // " << numMeta.at(_numType).numName
+                << "\n"
+            ;
+
+            templ
+                << "\n            template <size_t S>"
                 << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c) {"
                 << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), S);"
                 << "\n            }"
-                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
-                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"
                 << "\n        #pragma endregion // " << numMeta.at(_numType).numName
                 << "\n"
             ;
@@ -240,13 +262,20 @@ namespace ezsimd {
     }
 
     source << "\n} // namespace ezsimd";
-    header << "\n} // namespace ezsimd";
+    header 
+        << "\n} // namespace ezsimd"
+        << "\n"
+        << "\n#include \"libezsimd.tcc\" // full definitions for templates declared in this file only"
+        << "\n// templates declared in ezsimd.hpp are simply defined in ezsimd.hpp"
+    ;
+    templ << "\n} // namespace ezsimd";
 }
 
 int main() {
     ofstream source("../ezsimd.hpp");
     ofstream header("../libezsimd.hpp");
     ofstream library("../ezsimd.cpp");
+    ofstream templ("../libezsimd.tcc");
 
     if (!source.is_open()) {
         cerr << "Error opening output source file\n";
@@ -257,15 +286,19 @@ int main() {
     } if (!library.is_open()) {
         cerr << "Error opening output library file\n";
         return 1;
+    } if (!templ.is_open()) {
+        cerr << "Error opening output template file\n";
+        return 1;
     }
 
     library
         << "#include \"ezsimd.hpp\""
     ;
 
-    make(source, header);
+    make(source, header, templ);
     source.close();
     header.close();
     library.close();
+    templ.close();
     return 0;
 }
