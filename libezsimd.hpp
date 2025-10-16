@@ -556,5 +556,5 @@ namespace ezsimd {
     #pragma endregion // div
 } // namespace ezsimd
 
-#include "libezsimd.tcc" // full definitions for templates declared in this file only
+#include "libezsimd.ipp" // full definitions for templates declared in this file only
 // templates declared in ezsimd.hpp are simply defined in ezsimd.hpp
