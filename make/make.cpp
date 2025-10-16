@@ -29,11 +29,14 @@ void make(ofstream& source, ofstream& header) {
 // __AVX2__ uses same header as __AVX__
 #if defined(__AVX__)
     #include <immintrin.h>
-#elif defined(__SSE2__)
+#endif
+#if defined(__SSE2__)
     #include <emmintrin.h>
-#elif defined(__SSE__)
+#endif
+#if defined(__SSE__)
     #include <xmmintrin.h>
-#elif defined(__MMX__)
+#endif
+#if defined(__MMX__)
     #include <mmintrin.h>
 #endif
 

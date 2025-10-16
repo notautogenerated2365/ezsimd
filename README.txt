@@ -105,6 +105,30 @@ you typically have to specify to the compiler to enable certain features.
 For G++, you have to use additional flags to enable each SIMD type.
 -mmmx -msse -msse2 -mavx -mavx2
 
+This library only officially supports G++. Clang++ does not support multiversioning
+in the same way G++ does for some reason, and only seems to allow two versions of
+multiversioned functions. When compiled with Clang++, a warning will be issued,
+notifying you that only default (scalar) and AVX functions will be compiled.
+All other functions (MMX and SSE) are discarded. During runtime, only default and AVX
+functions will be available, so if AVX is not supported during runtime, it will
+fall back to scalar rather than SSE or MMX.
+
+If you wish to omit certain function targets from the executable (say, only include
+default and SSE/SSE2, no MMX or AVX/AVX2), undefine certain SIMD support macros.
+Macros:
+    MMX: __MMX__
+    SSE: __SSE__
+    SSE2: __SSE2__
+    AVX: __AVX__
+    AVX2: __AVX2__
+
+If you, say, undefine __MMX__ before including ezsimd.hpp, no MMX-target functions will be compiled.
+This can save space if you know that the computers running your program will always support either
+SSE/SSE2 or AVX/AVX2. Realisticly, SSE2 was first used in the year 2000, so any computer that can
+even run your program in the first place probably supports SSE2 in place of MMX. AVX was first used in 2011
+and AVX2 was first used in 2013, so in most cases you will want to keep the SSE and SSE2 functions
+as a fallback in case your program gets distributed to an extra old computer.
+
 If the header or library is compiled with the EZSIMD_SHOW_FUNC macro defined as the name of an ostream,
 like std::cout, then upon every function call, the library will output which target function is being used
 to the ostream.
