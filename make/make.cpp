@@ -265,7 +265,7 @@ namespace ezsimd {
     header 
         << "\n} // namespace ezsimd"
         << "\n"
-        << "\n#include \"libezsimd.ipp\" // full definitions for templates declared in this file only"
+        << "\n#include \"libezsimd.tpp\" // full definitions for templates declared in this file only"
         << "\n// templates declared in ezsimd.hpp are simply defined in ezsimd.hpp"
     ;
     templ << "\n} // namespace ezsimd";
@@ -275,7 +275,7 @@ int main() {
     ofstream source("../ezsimd.hpp");
     ofstream header("../libezsimd.hpp");
     ofstream library("../ezsimd.cpp");
-    ofstream templ("../libezsimd.ipp");
+    ofstream templ("../libezsimd.tpp");
 
     if (!source.is_open()) {
         cerr << "Error opening output source file\n";
