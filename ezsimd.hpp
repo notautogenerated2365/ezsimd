@@ -13,7 +13,7 @@
 
 #include "libezsimd.hpp"
 
-#ifndef __GNUC__
+#if !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
 #endif
 
@@ -40,7 +40,7 @@ namespace ezsimd {
     #pragma region // add
         #pragma region // int8_t
             __attribute__((target("default")))
-            void addBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
+            inline void addBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -194,7 +194,7 @@ namespace ezsimd {
 
         #pragma region // int16_t
             __attribute__((target("default")))
-            void addBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
+            inline void addBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -348,7 +348,7 @@ namespace ezsimd {
 
         #pragma region // int32_t
             __attribute__((target("default")))
-            void addBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
+            inline void addBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -502,7 +502,7 @@ namespace ezsimd {
 
         #pragma region // int64_t
             __attribute__((target("default")))
-            void addBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
+            inline void addBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -611,7 +611,7 @@ namespace ezsimd {
 
         #pragma region // __int128_t
             __attribute__((target("default")))
-            void addBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
+            inline void addBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -634,7 +634,7 @@ namespace ezsimd {
 
         #pragma region // uint8_t
             __attribute__((target("default")))
-            void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
+            inline void addBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -788,7 +788,7 @@ namespace ezsimd {
 
         #pragma region // uint16_t
             __attribute__((target("default")))
-            void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
+            inline void addBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -942,7 +942,7 @@ namespace ezsimd {
 
         #pragma region // uint32_t
             __attribute__((target("default")))
-            void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
+            inline void addBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1096,7 +1096,7 @@ namespace ezsimd {
 
         #pragma region // uint64_t
             __attribute__((target("default")))
-            void addBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
+            inline void addBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1205,7 +1205,7 @@ namespace ezsimd {
 
         #pragma region // __uint128_t
             __attribute__((target("default")))
-            void addBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
+            inline void addBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1228,7 +1228,7 @@ namespace ezsimd {
 
         #pragma region // float
             __attribute__((target("default")))
-            void addBackend(const float* a, const float* b, float* c, size_t l) {
+            inline void addBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1337,7 +1337,7 @@ namespace ezsimd {
 
         #pragma region // double
             __attribute__((target("default")))
-            void addBackend(const double* a, const double* b, double* c, size_t l) {
+            inline void addBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1446,7 +1446,7 @@ namespace ezsimd {
 
         #pragma region // long double
             __attribute__((target("default")))
-            void addBackend(const long double* a, const long double* b, long double* c, size_t l) {
+            inline void addBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") add\n";
                 #endif
@@ -1471,7 +1471,7 @@ namespace ezsimd {
     #pragma region // sub
         #pragma region // int8_t
             __attribute__((target("default")))
-            void subBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
+            inline void subBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -1625,7 +1625,7 @@ namespace ezsimd {
 
         #pragma region // int16_t
             __attribute__((target("default")))
-            void subBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
+            inline void subBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -1779,7 +1779,7 @@ namespace ezsimd {
 
         #pragma region // int32_t
             __attribute__((target("default")))
-            void subBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
+            inline void subBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -1933,7 +1933,7 @@ namespace ezsimd {
 
         #pragma region // int64_t
             __attribute__((target("default")))
-            void subBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
+            inline void subBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2042,7 +2042,7 @@ namespace ezsimd {
 
         #pragma region // __int128_t
             __attribute__((target("default")))
-            void subBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
+            inline void subBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2065,7 +2065,7 @@ namespace ezsimd {
 
         #pragma region // uint8_t
             __attribute__((target("default")))
-            void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
+            inline void subBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2219,7 +2219,7 @@ namespace ezsimd {
 
         #pragma region // uint16_t
             __attribute__((target("default")))
-            void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
+            inline void subBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2373,7 +2373,7 @@ namespace ezsimd {
 
         #pragma region // uint32_t
             __attribute__((target("default")))
-            void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
+            inline void subBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2527,7 +2527,7 @@ namespace ezsimd {
 
         #pragma region // uint64_t
             __attribute__((target("default")))
-            void subBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
+            inline void subBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2636,7 +2636,7 @@ namespace ezsimd {
 
         #pragma region // __uint128_t
             __attribute__((target("default")))
-            void subBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
+            inline void subBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2659,7 +2659,7 @@ namespace ezsimd {
 
         #pragma region // float
             __attribute__((target("default")))
-            void subBackend(const float* a, const float* b, float* c, size_t l) {
+            inline void subBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2768,7 +2768,7 @@ namespace ezsimd {
 
         #pragma region // double
             __attribute__((target("default")))
-            void subBackend(const double* a, const double* b, double* c, size_t l) {
+            inline void subBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2877,7 +2877,7 @@ namespace ezsimd {
 
         #pragma region // long double
             __attribute__((target("default")))
-            void subBackend(const long double* a, const long double* b, long double* c, size_t l) {
+            inline void subBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") sub\n";
                 #endif
@@ -2902,7 +2902,7 @@ namespace ezsimd {
     #pragma region // mul
         #pragma region // int8_t
             __attribute__((target("default")))
-            void mulBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
+            inline void mulBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -2925,7 +2925,7 @@ namespace ezsimd {
 
         #pragma region // int16_t
             __attribute__((target("default")))
-            void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
+            inline void mulBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3079,7 +3079,7 @@ namespace ezsimd {
 
         #pragma region // int32_t
             __attribute__((target("default")))
-            void mulBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
+            inline void mulBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3145,7 +3145,7 @@ namespace ezsimd {
 
         #pragma region // int64_t
             __attribute__((target("default")))
-            void mulBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
+            inline void mulBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3168,7 +3168,7 @@ namespace ezsimd {
 
         #pragma region // __int128_t
             __attribute__((target("default")))
-            void mulBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
+            inline void mulBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3191,7 +3191,7 @@ namespace ezsimd {
 
         #pragma region // uint8_t
             __attribute__((target("default")))
-            void mulBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
+            inline void mulBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3214,7 +3214,7 @@ namespace ezsimd {
 
         #pragma region // uint16_t
             __attribute__((target("default")))
-            void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
+            inline void mulBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3368,7 +3368,7 @@ namespace ezsimd {
 
         #pragma region // uint32_t
             __attribute__((target("default")))
-            void mulBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
+            inline void mulBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3434,7 +3434,7 @@ namespace ezsimd {
 
         #pragma region // uint64_t
             __attribute__((target("default")))
-            void mulBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
+            inline void mulBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3457,7 +3457,7 @@ namespace ezsimd {
 
         #pragma region // __uint128_t
             __attribute__((target("default")))
-            void mulBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
+            inline void mulBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3480,7 +3480,7 @@ namespace ezsimd {
 
         #pragma region // float
             __attribute__((target("default")))
-            void mulBackend(const float* a, const float* b, float* c, size_t l) {
+            inline void mulBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3589,7 +3589,7 @@ namespace ezsimd {
 
         #pragma region // double
             __attribute__((target("default")))
-            void mulBackend(const double* a, const double* b, double* c, size_t l) {
+            inline void mulBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3698,7 +3698,7 @@ namespace ezsimd {
 
         #pragma region // long double
             __attribute__((target("default")))
-            void mulBackend(const long double* a, const long double* b, long double* c, size_t l) {
+            inline void mulBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") mul\n";
                 #endif
@@ -3723,7 +3723,7 @@ namespace ezsimd {
     #pragma region // div
         #pragma region // int8_t
             __attribute__((target("default")))
-            void divBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
+            inline void divBackend(const int8_t* a, const int8_t* b, int8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3746,7 +3746,7 @@ namespace ezsimd {
 
         #pragma region // int16_t
             __attribute__((target("default")))
-            void divBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
+            inline void divBackend(const int16_t* a, const int16_t* b, int16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3769,7 +3769,7 @@ namespace ezsimd {
 
         #pragma region // int32_t
             __attribute__((target("default")))
-            void divBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
+            inline void divBackend(const int32_t* a, const int32_t* b, int32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3792,7 +3792,7 @@ namespace ezsimd {
 
         #pragma region // int64_t
             __attribute__((target("default")))
-            void divBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
+            inline void divBackend(const int64_t* a, const int64_t* b, int64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3815,7 +3815,7 @@ namespace ezsimd {
 
         #pragma region // __int128_t
             __attribute__((target("default")))
-            void divBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
+            inline void divBackend(const __int128_t* a, const __int128_t* b, __int128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3838,7 +3838,7 @@ namespace ezsimd {
 
         #pragma region // uint8_t
             __attribute__((target("default")))
-            void divBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
+            inline void divBackend(const uint8_t* a, const uint8_t* b, uint8_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3861,7 +3861,7 @@ namespace ezsimd {
 
         #pragma region // uint16_t
             __attribute__((target("default")))
-            void divBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
+            inline void divBackend(const uint16_t* a, const uint16_t* b, uint16_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3884,7 +3884,7 @@ namespace ezsimd {
 
         #pragma region // uint32_t
             __attribute__((target("default")))
-            void divBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
+            inline void divBackend(const uint32_t* a, const uint32_t* b, uint32_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3907,7 +3907,7 @@ namespace ezsimd {
 
         #pragma region // uint64_t
             __attribute__((target("default")))
-            void divBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
+            inline void divBackend(const uint64_t* a, const uint64_t* b, uint64_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3930,7 +3930,7 @@ namespace ezsimd {
 
         #pragma region // __uint128_t
             __attribute__((target("default")))
-            void divBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
+            inline void divBackend(const __uint128_t* a, const __uint128_t* b, __uint128_t* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -3953,7 +3953,7 @@ namespace ezsimd {
 
         #pragma region // float
             __attribute__((target("default")))
-            void divBackend(const float* a, const float* b, float* c, size_t l) {
+            inline void divBackend(const float* a, const float* b, float* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -4062,7 +4062,7 @@ namespace ezsimd {
 
         #pragma region // double
             __attribute__((target("default")))
-            void divBackend(const double* a, const double* b, double* c, size_t l) {
+            inline void divBackend(const double* a, const double* b, double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif
@@ -4171,7 +4171,7 @@ namespace ezsimd {
 
         #pragma region // long double
             __attribute__((target("default")))
-            void divBackend(const long double* a, const long double* b, long double* c, size_t l) {
+            inline void divBackend(const long double* a, const long double* b, long double* c, size_t l) {
                 #ifdef EZSIMD_SHOW_FUNC
                     std::cout << "target(\"default\") div\n";
                 #endif

@@ -23,7 +23,7 @@ void make(ofstream& source, ofstream& header) {
 
 #include "libezsimd.hpp"
 
-#ifndef __GNUC__
+#if !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
 #endif
 
@@ -95,7 +95,7 @@ namespace ezsimd {
             
             source
                 << "\n            __attribute__((target(\"default\")))"
-                << "\n            void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
+                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
                 << "\n                #ifdef EZSIMD_SHOW_FUNC"
                 << "\n                    std::cout << \"target(\\\"default\\\") "<< opMeta.at(_opType).name << "\\n\";"
                 << "\n                #endif"
@@ -107,7 +107,7 @@ namespace ezsimd {
             ;
 
             header
-                << "\n            void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            extern inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
             ;
 
             for (char l = 0; l < 5; l++) { // for each simdType
@@ -190,7 +190,7 @@ namespace ezsimd {
             header
                 << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c);"
                 << "\n            template <size_t S>"
-                << "\n            inline void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c) {"
+                << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c) {"
                 << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
                 << "\n            }"
                 << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
