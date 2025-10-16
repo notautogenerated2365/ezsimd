@@ -47,13 +47,16 @@ namespace ezsimd {
 #include <array>
 
 #if defined(__clang__)
-    #warning "clang currently produces unwanted behavior for SSE2 and AVX2 functions, disabling them"
+    #warning "clang currently produces unwanted behavior for large amounts of multiversioned functions, keeping only default, avx, and avx2 targets"
 
+    #ifdef __MMX__
+        #undef __MMX__
+    #endif
+    #ifdef __SSE__
+        #undef __SSE__
+    #endif
     #ifdef __SSE2__
         #undef __SSE2__
-    #endif
-    #ifdef __AVX2__
-        #undef __AVX2__
     #endif
 #elif !(defined(__GNUC__) && !defined(__clang__))
     #warning "compiler may not be supported"
