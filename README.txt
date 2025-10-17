@@ -9,7 +9,7 @@ Also my first ever GitHub project, I don't really know how any of this works
 +-- ezsimd.cpp      can be compiled into a static or shared library
 +-- libezsimd.hpp   can be included into a project that uses the static or shared library
 +-- libezsimd.tpp   template definitions for libezsimd.hpp
-+-- ezsimd.hpp      can be included into a project without using static or shared library
++-- ezsimd.hpp      can be included into a project without using static or shared library (includes all needed components at compile time)
 
 This library defines functions for addition, subtraction, multiplication, and division
 of 8 to 128-bit signed/unsigned integers and 32 to 128-bit floats.
