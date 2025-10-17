@@ -8,7 +8,7 @@ Also my first ever GitHub project, I don't really know how any of this works
     +-- makefile    will compile and run the program to produce the three files below
 +-- ezsimd.cpp      can be compiled into a static or shared library
 +-- libezsimd.hpp   can be included into a project that uses the static or shared library
-+-- libezsimd.ipp   template definitions for libezsimd.hpp
++-- libezsimd.tpp   template definitions for libezsimd.hpp
 +-- ezsimd.hpp      can be included into a project without using static or shared library
 
 This library defines functions for addition, subtraction, multiplication, and division
