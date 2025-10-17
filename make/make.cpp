@@ -77,7 +77,7 @@ namespace ezsimd {
 #include <cstdint>
 #include <array>
 
-// all backend functions must be declared for templated frontends to work properly
+// all backend functions are declared here so templated frontends can work properly
 // templated functions declared in libezsimd.hpp, defined in this file
 
 namespace ezsimd {
@@ -142,9 +142,10 @@ namespace ezsimd {
                 << "\n            }"
             ;
 
-            header
+            templ
                 << "\n            __attribute__((target(\"default\")))"
                 << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << '\n'
             ;
 
             for (char l = 0; l < 5; l++) { // for each simdType
