@@ -106,6 +106,41 @@ you typically have to specify to the compiler to enable certain features.
 For G++, you have to use additional flags to enable each SIMD type.
 -mmmx -msse -msse2 -mavx -mavx2
 
+To use this as a static library:
+    In your main file, include libezsimd.hpp
+
+    On Windows w/ MinGW-w64:
+        g++ ezsimd.cpp -mmmx -msse -msse2 -mavx -mavx2 -c -o ezsimd.obj
+        ar -rcs ezsimd.lib ezsimd.obj
+        rm ezsimd.obj
+    
+    On Linux:
+        g++ ezsimd.cpp -mmmx -msse -msse2 -mavx -mavx2 -c -o ezsimd.o
+        ar -rcs libezsimd.a ezsimd.o
+        rm ezsimd.o
+    
+    Link to the library when compiling your program.
+
+To use this as a dynamic library:
+    In your main file, include libezsimd.hpp
+
+    On Windows w/ MinGW-w64:
+        g++ ezsimd.cpp -mmmx -msse -msse2 -mavx -mavx2 -shared -fPIC ezsimd.dll
+    
+    On Linux:
+        g++ ezsimd.cpp -mmmx -msse -msse2 -mavx -mavx2 -shared -fPIC libezsimd.so
+    
+    Link to the library when compiling your program.
+
+To use this as a header (assuming main file is called main.cpp):
+    In your main file, include ezsimd.hpp
+
+    On Windows w/ MinGW-w64:
+        g++ main.cpp -mmmx -msse -msse2 -mavx -mavx2 -o main.exe
+    
+    On Linux:
+        g++ main.cpp -mmmx -msse -msse2 -mavx -mavx2 -o main
+
 This library only officially supports G++. Clang++ does not support multiversioning
 in the same way G++ does for some reason, and only seems to allow two versions of
 multiversioned functions. When compiled with Clang++, a warning will be issued,
