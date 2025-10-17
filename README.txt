@@ -5,7 +5,7 @@ Also my first ever GitHub project, I don't really know how any of this works
     +-- make.cpp    the program
     +-- enums.hpp   enum definitions for organizing data
     +-- maps.hpp    maps defining SIMD/operation/number type support among other important things
-    +-- makefile    will compile and run the program to produce the three files below
+    +-- makefile    will compile and run the program to produce the four files below
 +-- ezsimd.cpp      can be compiled into a static or shared library
 +-- libezsimd.hpp   can be included into a project that uses the static or shared library
 +-- libezsimd.tpp   template definitions for libezsimd.hpp
