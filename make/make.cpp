@@ -238,7 +238,6 @@ namespace ezsimd {
                 << "\n            template <size_t S>"
                 << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c);"
                 << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
-                << "\n            #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"
                 << "\n        #pragma endregion // " << numMeta.at(_numType).numName
                 << "\n"
             ;
@@ -258,6 +257,12 @@ namespace ezsimd {
         ;
 
         header
+            << "        "
+            << "\n        #define " << opMeta.at(_opType).capsName << "(a, b, c) " << opMeta.at(_opType).name << "(a, b, c, ezsimd::arrayLength(a))"   
+            << "\n    #pragma endregion // " << opMeta.at(_opType).name
+        ;
+
+        templ
             << "    #pragma endregion // " << opMeta.at(_opType).name
         ;
     }

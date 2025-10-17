@@ -272,7 +272,7 @@ namespace ezsimd {
                 addBackend(a.data(), b.data(), c.data(), S);
             }
         #pragma endregion // long double
-
+    #pragma endregion // add
     
     #pragma region // sub
         #pragma region // int8_t
@@ -534,7 +534,7 @@ namespace ezsimd {
                 subBackend(a.data(), b.data(), c.data(), S);
             }
         #pragma endregion // long double
-
+    #pragma endregion // sub
     
     #pragma region // mul
         #pragma region // int8_t
@@ -726,7 +726,7 @@ namespace ezsimd {
                 mulBackend(a.data(), b.data(), c.data(), S);
             }
         #pragma endregion // long double
-
+    #pragma endregion // mul
     
     #pragma region // div
         #pragma region // int8_t
@@ -878,5 +878,5 @@ namespace ezsimd {
                 divBackend(a.data(), b.data(), c.data(), S);
             }
         #pragma endregion // long double
-
+    #pragma endregion // div
 } // namespace ezsimd
