@@ -131,7 +131,7 @@ namespace ezsimd {
             
             source
                 << "\n            __attribute__((target(\"default\")))"
-                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
+                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l) {"
                 << "\n                #ifdef EZSIMD_SHOW_FUNC"
                 << "\n                    EZSIMD_SHOW_FUNC << \"target(\\\"default\\\") "<< opMeta.at(_opType).name << "\\n\";"
                 << "\n                #endif"
@@ -144,7 +144,7 @@ namespace ezsimd {
 
             templ
                 << "\n            __attribute__((target(\"default\")))"
-                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            inline void " << opMeta.at(_opType).name << "Backend(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l);"
                 << '\n'
             ;
 
@@ -226,7 +226,7 @@ namespace ezsimd {
                 << "\n                " << opMeta.at(_opType).name << "Backend(a.data(), b.data(), c.data(), a.size());"
                 << "\n            }"
                 << "\n            "
-                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l) {"
+                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l) {"
                 << "\n                " << opMeta.at(_opType).name << "Backend(a, b, c, l);"
                 << "\n            }"
                 << "\n        #pragma endregion // " << numMeta.at(_numType).numName
@@ -237,7 +237,7 @@ namespace ezsimd {
                 << "\n            void " << opMeta.at(_opType).name << "(const std::vector<" << numMeta.at(_numType).numName << ">& a, const std::vector<" << numMeta.at(_numType).numName << ">& b, std::vector<" << numMeta.at(_numType).numName <<">& c);"
                 << "\n            template <size_t S>"
                 << "\n            void " << opMeta.at(_opType).name << "(const std::array<" << numMeta.at(_numType).numName << ", S>& a, const std::array<" << numMeta.at(_numType).numName << ", S>& b, std::array<" << numMeta.at(_numType).numName <<", S>& c);"
-                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, size_t l);"
+                << "\n            void " << opMeta.at(_opType).name << "(const " << numMeta.at(_numType).numName << "* a, const " << numMeta.at(_numType).numName << "* b, " << numMeta.at(_numType).numName << "* c, const size_t l);"
                 << "\n        #pragma endregion // " << numMeta.at(_numType).numName
                 << "\n"
             ;
