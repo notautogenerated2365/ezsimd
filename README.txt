@@ -1,15 +1,14 @@
 A library/header for simplifying SIMD operations on vectors and arrays in C++.
 Also my first ever GitHub project, I don't really know how any of this works
 
-+-- make/           contains program I used to make the ezsimd source and header files
-    +-- make.cpp    the program
-    +-- enums.hpp   enum definitions for organizing data
-    +-- maps.hpp    maps defining SIMD/operation/number type support among other important things
-    +-- makefile    will compile and run the program to produce the four files below
-+-- ezsimd.cpp      can be compiled into a static or shared library
-+-- libezsimd.hpp   can be included into a project that uses the static or shared library
-+-- libezsimd.tpp   template definitions for libezsimd.hpp
-+-- ezsimd.hpp      can be included into a project without using static or shared library (includes all needed components at compile time)
++-- make/               contains program I used to make the ezsimd source and header files
+    +-- make.js         the program
+    +-- arrays.cjs      contains data for the make program
+    +-- objects.cjs     contains data for the make program
++-- ezsimd.cpp          can be compiled into a static or shared library
++-- libezsimd.hpp       can be included into a project that uses the static or shared library
++-- libezsimd.tpp       template definitions for libezsimd.hpp
++-- ezsimd.hpp          can be included into a project without using static or shared library (includes all needed components at compile time)
 
 This library defines functions for addition, subtraction, multiplication, and division
 of 8 to 128-bit signed/unsigned integers and 32 to 128-bit floats.
