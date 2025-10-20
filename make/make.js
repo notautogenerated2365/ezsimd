@@ -286,14 +286,14 @@ namespace ezsimd {
     ;
     templ += "\n} // namespace ezsimd";
 
-    fs.writeFile(sourcePath, source, (err) =>{
-        if (err) console.log(err);
+    fs.writeFile(sourcePath, source, (err) => {
+        if (err) console.error(err);
     });
-    fs.writeFile(headerPath, header, (err) =>{
-        if (err) console.log(err);
+    fs.writeFile(headerPath, header, (err) => {
+        if (err) console.error(err);
     });
-    fs.writeFile(templPath, templ, (err) =>{
-        if (err) console.log(err);
+    fs.writeFile(templPath, templ, (err) => {
+        if (err) console.error(err);
     });
 }
 
