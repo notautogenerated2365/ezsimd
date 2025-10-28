@@ -170,4 +170,3 @@ like std::cout, then upon every function call, the library will output which tar
 to the ostream.
 
 This has not been tested in any meaningful capacity.
-OpenCL/CUDA functions are in the works.
