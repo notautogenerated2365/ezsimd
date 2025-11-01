@@ -279,7 +279,7 @@ namespace ezsimd {
 
     source += "\n} // namespace ezsimd";
     header += ""
-        + "\n} // namespace ezsimd";
+        + "\n} // namespace ezsimd"
         + "\n"
         + "\n#include \"libezsimd.tpp\" // full definitions for templates declared in this file only"
         + "\n// templates declared in ezsimd.hpp are simply defined in ezsimd.hpp"

@@ -407,3 +407,6 @@ namespace ezsimd {
         #define DIV(a, b, c) div(a, b, c, ezsimd::arrayLength(a))
     #pragma endregion // div
 } // namespace ezsimd
+
+#include "libezsimd.tpp" // full definitions for templates declared in this file only
+// templates declared in ezsimd.hpp are simply defined in ezsimd.hpp
